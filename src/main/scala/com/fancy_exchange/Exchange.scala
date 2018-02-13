@@ -12,9 +12,9 @@ object Exchange extends App {
     orderBook.getOrElse(counterpartKey, List.empty) match {
       case (counterpartOrder: Order) :: rest =>
         val updatedOrderBook = orderBook.updated(counterpartKey, rest)
-        val maker = clients(order.clientId).exchange(order.currency, order.price, order.amount)
-        val taker = clients(counterpartOrder.clientId).exchange(counterpartOrder.currency, counterpartOrder.price, counterpartOrder.amount)
-        val updatedClients = clients + (order.clientId -> maker, counterpartOrder.clientId -> taker)
+        val taker = clients(order.clientId).exchange(order.currency, order.price, order.amount)
+        val maker = clients(counterpartOrder.clientId).exchange(counterpartOrder.currency, counterpartOrder.price, counterpartOrder.amount)
+        val updatedClients = clients + (order.clientId -> taker, counterpartOrder.clientId -> maker)
         (updatedOrderBook, updatedClients)
       case Nil =>
         val orderKey = order.toKey
